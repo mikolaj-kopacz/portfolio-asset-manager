@@ -12,7 +12,7 @@ def verify_password(plain_password, hashed_password) -> bool:
 def get_password_hash(password) -> str:
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: timedelta):
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     now = datetime.now(timezone.utc)
 
