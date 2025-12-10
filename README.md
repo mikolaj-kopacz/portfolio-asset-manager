@@ -1,93 +1,70 @@
-# Portfolio Asset Manager 💼
-A backend API application for investment portfolio management, designed according to modern software engineering standards (2025).  
-The project demonstrates the use of an advanced Python technology stack, modular architecture, and a focus on security and code quality.
+# Portfolio Asset Manager 🚀
 
-## 🚀 Key Features
-- 🔐 **Secure Authorization:** Full registration and login system based on **JWT (JSON Web Tokens)** with password hashing using Bcrypt.
-- 🛡️ **Data Separation:** Application-level Multi-tenancy – users can access only their own assets.
-- 💰 **Asset Management:** REST API endpoints for adding and viewing investments with automatic owner assignment.
-- ⚡ **High Performance:** Asynchronous FastAPI (async/await).
+![Python](https://img.shields.io/badge/Python-3.13%2B-blue?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.124%2B-009688?logo=fastapi&logoColor=white)
+![SQLModel](https://img.shields.io/badge/SQLModel-Database-green)
+![uv](https://img.shields.io/badge/uv-Package_Manager-purple)
 
-## 🛠️ Tech Stack
-- **Language:** Python 3.13+
-- **Framework:** FastAPI 0.124+
-- **ORM / Database:** SQLModel (Pydantic + SQLAlchemy)
-- **Dependency Management:** uv (fast successor to pip/poetry)
-- **Code Quality:** Ruff (linting + formatting)
+## 📋 Overview
 
-## ⚙️ Installation and Setup
+**Portfolio Asset Manager** is a robust, high-performance backend API designed to securely manage personal investment portfolios. It solves the problem of tracking distributed assets by providing a centralized, secure ledger accessible via REST endpoints.
 
-### 1. Prerequisites
-Install **uv**:
+Unlike simple CRUD apps, this project focuses on **Engineering Maturity**: implementing strict Multi-Tenancy (users see only their data), industrial-grade security (JWT + Bcrypt), and a modern, scalable architecture.
 
-**Windows (PowerShell):**
-```powershell
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
+## 🏗 Architecture
 
-**macOS / Linux:**
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-```
+The system follows a modular **Clean Architecture** principle, ensuring separation of concerns:
 
-### 2. Clone and Install
-```bash
-git clone https://github.com/your-username/portfolio-asset-manager.git
-cd portfolio-asset-manager
+1.  **Security Layer:** Handles JWT issuance (PyJWT), password hashing (Bcrypt), and request interception via Dependency Injection to ensure only authenticated access.
+2.  **API Layer:** RESTful endpoints built with **FastAPI**, fully typed with Pydantic schemas for strict data validation.
+3.  **Storage Layer:** Relational data persistance managed by **SQLModel**, utilizing Foreign Keys to enforce ownership relationships between Users and Assets.
 
-uv sync
-```
+## 🛠 Tech Stack
 
-### 3. Run Development Server
-```bash
-uv run uvicorn src.asset_manager.main:app --reload
-```
+* **Language:** Python 3.13
+* **Framework:** FastAPI (Async/Await)
+* **Database:** SQLModel (SQLite for dev / PostgreSQL ready)
+* **Package Manager:** uv (Next-gen Python tooling, replacing pip/poetry)
+* **Security:** PyJWT (Token handling), Passlib/Bcrypt (Hashing)
+* **Quality Assurance:** Ruff (Linter/Formatter)
 
-API docs (Swagger UI) will be available at:  
-**http://127.0.0.1:8000/docs**
+## 🚀 How to Run
 
----
+### Prerequisites
+* **uv** installed (The modern Python package manager)
+* Python 3.10+
 
-## 🧪 Development and Quality Assurance (QA)
+### Installation
 
-### Code Formatting (Auto-fix)
-```bash
-uv run ruff format .
-```
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/YOUR_USERNAME/portfolio-asset-manager.git](https://github.com/YOUR_USERNAME/portfolio-asset-manager.git)
+    cd portfolio-asset-manager
+    ```
 
-### Static Analysis (Linter)
-```bash
-uv run ruff check . --fix
-```
+2.  **Install dependencies (Lightning fast via uv):**
+    ```bash
+    uv sync
+    ```
 
-### Tests
-```bash
-uv run pytest
-```
+### Usage
 
----
+1.  **Start the API Server:**
+    ```bash
+    uv run uvicorn src.asset_manager.main:app --reload
+    ```
 
-## 📂 Project Structure
-```
-src/asset_manager/
-├── api/
-│   ├── v1/endpoints/   # Business logic for endpoints (users, assets, auth)
-│   └── deps.py         # Dependencies (Dependency Injection)
-├── core/               # Global config and security (hashing, JWT)
-├── db/                 # Database models and session configuration
-├── schemas/            # Pydantic schemas (DTOs)
-└── main.py             # Application entry point
-```
+2.  **Explore the API:**
+    Open your browser and navigate to the interactive Swagger UI:
+    👉 **http://127.0.0.1:8000/docs**
 
----
+    * **Step 1:** Create a user via `POST /api/v1/users/`
+    * **Step 2:** Login via the **Authorize** button (or `POST /api/v1/token`)
+    * **Step 3:** Manage assets via `POST` and `GET /api/v1/assets/`
 
-## 🔜 Roadmap
-- [ ] Integration with external APIs (e.g., CoinGecko)
-- [ ] Authorization endpoint tests
-- [ ] Docker containerization
-- [ ] Deployment to cloud (Render)
+## 💡 Challenges & Lessons Learned
 
----
+During the development, I encountered a significant **Dependency Hell** issue involving `passlib` and newer versions of `bcrypt` (v4.0+), which caused the authentication system to crash silently.
+* **Solution:** I learned how to use `uv` to strictly pin compatible library versions in `pyproject.toml`, ensuring a reproducible build environment.
 
-## 👤 Author
-**Mikolaj Kopacz**
+Another challenge was strictly typing the **ORM Relationships**. Mapping Pydantic input models to SQLModel database entities required a deep understanding of how to unpack dictionaries (`**model_dump()`) while manually injecting secure fields like `owner_id` from the JWT token.
