@@ -1,8 +1,10 @@
 from sqlmodel import SQLModel
 
+
 class AssetBase(SQLModel):
     ticker: str
     amount: float
+
 
 class AssetCreate(AssetBase):
     pass

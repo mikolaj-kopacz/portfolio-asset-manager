@@ -1,7 +1,9 @@
 from sqlmodel import SQLModel
 
+
 class UserBase(SQLModel):
     email: str
+
 
 class UserCreate(UserBase):
     password: str

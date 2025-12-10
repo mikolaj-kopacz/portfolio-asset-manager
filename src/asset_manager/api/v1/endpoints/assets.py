@@ -10,16 +10,24 @@ from sqlmodel import select
 
 router = APIRouter()
 
-@router.post("/",response_model=AssetRead)
-def create_asset(asset_in: AssetCreate,db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    asset = Asset(**asset_in.model_dump(),owner_id = current_user.id)
+
+@router.post("/", response_model=AssetRead)
+def create_asset(
+    asset_in: AssetCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    asset = Asset(**asset_in.model_dump(), owner_id=current_user.id)
     db.add(asset)
     db.commit()
     db.refresh(asset)
 
     return asset
 
-@router.get("/",response_model=List[AssetRead])
-def read_assets(db: Session = Depends(get_db),current_user: User = Depends(get_current_user)):
+
+@router.get("/", response_model=List[AssetRead])
+def read_assets(
+    db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
     assets = db.exec(select(Asset).where(Asset.owner_id == current_user.id)).all()
     return assets
